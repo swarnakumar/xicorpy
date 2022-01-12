@@ -1,0 +1,22 @@
+site_name: My Docs
+
+theme:
+  name: "material"
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: false
+      watch:
+        - src
+
+nav:
+  - Home: index.md
+  - Code Reference:
+      - XiCor: xicor.md
+      - Conditional Dependence: codec.md
+      - FOCI: foci.md
