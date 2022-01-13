@@ -97,6 +97,30 @@ def test_compute_xi_anscombes_quartet_3_yx(anscombes_quartet):
     assert np.allclose(xi, 0.736111, 1e-4), f"xi = {xi}. Expected: 0.736111"
 
 
+def test_compute_xi_anscombes_quartet_4_xy(anscombes_quartet):
+    xi = compute_xi_correlation(
+        anscombes_quartet["x_4"], anscombes_quartet["y_4"], get_modified_xi=False
+    )
+    assert np.allclose(xi, 0.175), f"xi = {xi}. Expected: 0.175"
+
+    xi = compute_xi_correlation(
+        anscombes_quartet["x_4"], anscombes_quartet["y_4"], get_modified_xi=True
+    )
+    assert np.allclose(xi, 0.111111, 1e-4), f"xi = {xi}. Expected: 0.111111"
+
+
+def test_compute_xi_anscombes_quartet_4_yx(anscombes_quartet):
+    xi = compute_xi_correlation(
+        anscombes_quartet["y_4"], anscombes_quartet["x_4"], get_modified_xi=False
+    )
+    assert np.allclose(xi, 0.45, 1e-4), f"xi = {xi}. Expected: 0.45"
+
+    xi = compute_xi_correlation(
+        anscombes_quartet["y_4"], anscombes_quartet["x_4"], get_modified_xi=True
+    )
+    assert np.allclose(xi, 0.75, 1e-4), f"xi = {xi}. Expected: 0.75"
+
+
 def test_compute_xi_df_df_xy(anscombes_quartet):
     x = pd.DataFrame({k: v for k, v in anscombes_quartet.items() if "x" in k})
     y = pd.DataFrame({k: v for k, v in anscombes_quartet.items() if "y" in k})
@@ -178,3 +202,25 @@ def test_internal_xi(anscombes_quartet):
 
     for k in anscombes_quartet:
         assert xi.loc[k, k] == 1
+
+
+def test_error_checks():
+    with pytest.raises(ValueError):
+        # No x passed. Value Error
+        compute_xi_correlation([])
+
+    with pytest.raises(ValueError):
+        # Blank Y passed
+        compute_xi_correlation([1, 2, 3], [])
+
+    with pytest.raises(ValueError):
+        # No Y, but 1-d X
+        compute_xi_correlation([1, 2, 3])
+
+    with pytest.raises(ValueError):
+        # No Y, 2-d X, but single column
+        compute_xi_correlation([[1, 2, 3]])
+
+    with pytest.raises(ValueError):
+        # Unequal shapes
+        compute_xi_correlation([1, 2, 3], [3, 4])

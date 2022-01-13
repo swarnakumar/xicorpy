@@ -1,6 +1,11 @@
 # Chatterjee's Xi, its Applications, and Offshoots
 
-XicorPy is a Python package implementing Chatterjee's Xi, and its various offshoots.
+XicorPy is a Python package implementing **Chatterjee's Xi**, and its various offshoots. You can use the package with raw python objects, NumPy arrays, or Pandas DataFrames.
+
+Please see the [Documentation][docs] for an introductory tutorial and a full
+user guide.
+
+## Features
 
 The package currently implements:   
 
@@ -10,12 +15,10 @@ The package currently implements:
 4. Feature Selection Algorithm (FOCI) from [3]
 
 
-
-## Installation
+## Usage
 
 The package is available on PyPI. You can install using pip: `pip install xicorpy`.
 
-## Usage
 
 ```python
 import xicorpy
@@ -28,12 +31,19 @@ xi, p_value = xicorpy.compute_xi_correlation(x, y, get_p_values=True)
 
 ```
 
-Refer to Documentation for more details.
+Refer to the [User Guide][user_guide] for more details.
+
+## Contributing to XiCorPy
+
+Any help with the package is greatly appreciated! Pull requests and bug reports are greatly welcome!
 
 
-## Citations
+## Citations:
 
 1. [Chatterjee (2020). "A new coefficient of correlation"](https://arxiv.org/abs/1909.10140)
 2. [Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"](https://arxiv.org/abs/2108.06828)
 3. [Azadkia and Chatterjee (2021). "A simple measure of conditional dependence"](https://arxiv.org/abs/1910.12327)
 
+<!-- Links -->
+[docs]: https://xicorpy.readthedocs.io/en/latest/
+[user_guide]: https://xicorpy.readthedocs.io/en/latest/user_guide.html

@@ -11,22 +11,43 @@ _RetType = Union[float, npt.NDArray, pd.DataFrame]
 
 
 class XiCorrelation:
+    """Class containing Xi Correlation computation components"""
+
     def __init__(self, x: npt.ArrayLike, y: npt.ArrayLike = None):
-        assert 1 <= np.ndim(x) <= 2, "x must be a 1D or 2D array"
+        """
+        If only `x` is passed, computes correlation between each column of `x`.
+        If `y` is also passed, computes correlation between each column of `x` vs each column of `y`.
+
+        If only `x` is passed, `x` MUST be 2-d. Otherwise, both `x` and `y` can be 1-d
+
+        Args:
+            x (npt.ArrayLike): A single list or list of lists or 1D/2D numpy array or pd.Series or pd.DataFrame.
+            y (npt.ArrayLike): A single list or list of lists or 1D/2D numpy array or pd.Series or pd.DataFrame.
+
+        Raises:
+            ValueError: If x and y are not of the same shape.
+            ValueError: If there's less than 2 columns to compute correlation.
+
+        """
+        if not (1 <= np.ndim(x) <= 2 and np.shape(x)[0] >= 1):
+            raise ValueError("x must be a 1D/2D array/list")
 
         x_df = pd.DataFrame(x)
         x_shape = np.shape(x)
 
         if y is not None:
-            assert 1 <= np.ndim(y) <= 2, "y must be 1D or 2D"
+            if not (1 <= np.ndim(y) <= 2 and np.shape(y)[0] >= 1):
+                raise ValueError("y must be a 1D/2D array/list")
             y_shape = np.shape(y)
-            assert x_shape[0] == y_shape[0], (
-                f"x: {x_shape[0]} samples, y: {y_shape[0]} samples. "
-                f"x and y MUST HAVE the same number of samples"
-            )
+            if x_shape[0] != y_shape[0]:
+                raise ValueError(
+                    f"x: {x_shape[0]} samples, y: {y_shape[0]} samples. "
+                    f"x and y MUST HAVE the same number of samples"
+                )
             y_df = pd.DataFrame(y)
         else:
-            assert np.ndim(x) == 2, "x must be 2D if y is not provided"
+            if not (np.ndim(x) == 2 and np.shape(x)[0] >= 2 and np.shape(x)[1] >= 2):
+                raise ValueError("x must be 2D if y is not provided")
             y_df = pd.DataFrame(x)
 
         self.x_df = convert_to_numeric(x_df)
@@ -41,6 +62,36 @@ class XiCorrelation:
         m_nearest_neighbours: int = None,
         get_p_values: bool = False,
     ) -> Union[_RetType, Tuple[_RetType, _RetType]]:
+        """
+        Compute the Xi Coefficient (Chatterjee's Rank Correlation) between columns in X and Y.
+
+        Xi Coefficient based on:
+            [Chatterjee (2020). "A new coefficient of correlation"](https://arxiv.org/abs/1909.10140)
+
+
+        Modified Xi Coefficient based on:
+            [Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"](https://arxiv.org/abs/2108.06828)
+
+        The modified Xi Coefficient looks at M nearest neighbours to compute the correlation.
+        This allows the coefficient to converge much faster. However, it is computationally slightly more intensive.
+        For very large data, the two are likely to be very similar. We recommend using the modified Xi Coefficient.
+
+        Args:
+            get_modified_xi: Should the modified xi be computed?
+            m_nearest_neighbours: Only used if get_modified_xi is True.
+            get_p_values: Should the p-values be computed?
+                            The null hypothesis is that Y is completely independent of X (i.e., xi = 0).
+
+        Returns:
+            float/np.ndarray/pd.DataFrame:
+            - Xi Coefficient Values.
+                - If both X and Y are 1-d, returns a single float.
+                - If X is numpy object, returns a 2-D numpy array.
+                - Otherwise returns a pd.DataFrame.
+            - P-Values (only if get_p_values are true):
+                - Same format at Xi
+
+        """
         ret = pd.DataFrame(0, index=self.x_df.columns, columns=self.y_df.columns)
         _, p = _get_p_no_ties(0, self.x_df.shape[0])
         p_values = pd.DataFrame(p, index=self.x_df.columns, columns=self.y_df.columns)
@@ -113,6 +164,8 @@ def compute_xi_correlation(
     get_p_values: bool = False,
 ) -> Union[_RetType, Tuple[_RetType, _RetType]]:
     """
+    Helper function to compute the Xi Coefficient - uses the class machinery from `XiCorrelation`.
+
     Compute the Xi Coefficient (Chatterjee's Rank Correlation) between columns in X and Y.
 
     Xi Coefficient based on:
