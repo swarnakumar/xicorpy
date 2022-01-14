@@ -1,45 +1,83 @@
-name: Test
+name: test
 
-on:
-  push:
-  pull_request:
-    types: [opened, synchronize]
+on: pull_request
 
 jobs:
-  test:
+  linting:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8, 3.9, 3.10]
-      fail-fast: false
-
     steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
       - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
+      #----------------------------------------------
+      #        load pip cache if cache exists
+      #----------------------------------------------
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+          restore-keys: ${{ runner.os }}-pip
+      #----------------------------------------------
+      #          install and run linters
+      #----------------------------------------------
+      - run: python -m pip install black flake8 isort
+      - run: |
+          flake8 .
+          black . --check
+  test:
+    needs: linting
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest" ]
+        python-version: [ "3.8", "3.9", "3.10" ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up python ${{ matrix.python-version }}
+        id: setup-python
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Get full python version
-        id: full-python-version
-        run: echo ::set-output name=version::$(python -c "import sys; print('-'.join(str(v) for v in sys.version_info))")
-      - name: Install poetry
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install poetry
-      - name: Configure poetry
-        run: python -m poetry config virtualenvs.in-project true
-      - name: Set up cache
-        uses: actions/cache@v1
-        id: cache
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Ensure cache is healthy
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: python -m poetry run pip --version >/dev/null 2>&1 || rm -rf .venv
-      - name: Install Dependencies
-        run: python -m poetry install
-      - name: Test
-        run: python -m poetry run bash scripts/test.sh
-      - name: Upload coverage
-        uses: codecov/codecov-action@v1
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install library
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      #    add matrix specifics and run test suite
+      #----------------------------------------------
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          pytest tests/
+          coverage report
