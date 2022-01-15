@@ -1,19 +1,19 @@
 # Chatterjee's Xi Coefficient
 
-Chatterjee's Xi is a measures if `Y is a function of X`. 
+Chatterjee's Xi[^1] measures if `Y is a function of X`. 
 The coefficient is 0 if X and Y are independent, and 1 if Y is a measurable function of X. 
 Xi is computed by comparing ranks of consecutive values of X when Y is sorted. 
 
-Lin and Han's [2] modification makes the original formulation more robust by comparing M right-neighbours. 
+Lin and Han's [^2] modification makes the original formulation more robust by comparing M right-neighbours. 
 When M == 1, it reduces to the original formulation.
 
 Do note that this formulation is `asymmetric`:
 
 ```
 Xi(X, Y): Measures Y as a function of X
-Xi (Y, X): Measures X as a function of Y 
+Xi(Y, X): Measures X as a function of Y 
 
-Xi (X, Y) != Xi (Y, X)
+Xi(X, Y) != Xi(Y, X)
 ```
 
 To illustrate this better, consider the following example:
@@ -38,8 +38,8 @@ While we cannot have an estimate of Y given X, we can estimate X given Y - `If Y
 
 | Direction | Chatterjee's Xi | Modified Xi |
 |-----------|----------------|--------------|
-| Xi (X, Y)     | 0.175           | 0.111         |
-| Xi (Y, X)     | 0.45           | 0.75         |
+| Xi(X, Y)     | 0.175           | 0.111         |
+| Xi(Y, X)     | 0.45           | 0.75         |
 
 The above table also illustrates the impact of Lin and Han's modification. 
 For very large data, the two are likely to be very similar, and for smaller data, Lin and Han's formulation tends to be appropriate.
@@ -106,6 +106,6 @@ xi = xicorpy.compute_xi_correlation(x)
 
 ## Citations
 
-1. [Chatterjee (2020). "A new coefficient of correlation"](https://arxiv.org/abs/1909.10140)
-2. [Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"](https://arxiv.org/abs/2108.06828)
+[^1]: [Chatterjee (2020). "A new coefficient of correlation"](https://arxiv.org/abs/1909.10140)
+[^2]: [Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"](https://arxiv.org/abs/2108.06828)
 

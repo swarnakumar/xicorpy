@@ -3,6 +3,9 @@ site_name: XiCorPy
 theme:
   name: "material"
 
+markdown_extensions:
+  - footnotes
+
 plugins:
   - search
   - mkdocstrings:
@@ -17,7 +20,8 @@ plugins:
 nav:
   - Home: index.md
   - Chatterjee's Xi: xi.md
+  - Conditional Dependence: codec.md
   - API Reference:
-      - XiCor: xicor.md
-      - Conditional Dependence: codec.md
+      - XiCor: xicor_api.md
+      - Conditional Dependence: codec_api.md
       - FOCI: foci.md
