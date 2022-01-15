@@ -256,22 +256,37 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../codec/" class="md-nav__link">
+        Conditional Dependence
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_3">
+        <label class="md-nav__link" for="__nav_4">
           API Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="API Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_3">
+        <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           API Reference
         </label>
@@ -283,7 +298,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../xicor/" class="md-nav__link">
+      <a href="../xicor_api/" class="md-nav__link">
         XiCor
       </a>
     </li>
@@ -297,7 +312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../codec.md" class="md-nav__link">
+      <a href="../codec_api/" class="md-nav__link">
         Conditional Dependence
       </a>
     </li>
@@ -379,16 +394,16 @@
                 
 
 <h1 id="chatterjees-xi-coefficient">Chatterjee's Xi Coefficient</h1>
-<p>Chatterjee's Xi is a measures if <code>Y is a function of X</code>. 
+<p>Chatterjee's Xi<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> measures if <code>Y is a function of X</code>. 
 The coefficient is 0 if X and Y are independent, and 1 if Y is a measurable function of X. 
 Xi is computed by comparing ranks of consecutive values of X when Y is sorted. </p>
-<p>Lin and Han's [2] modification makes the original formulation more robust by comparing M right-neighbours. 
+<p>Lin and Han's <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> modification makes the original formulation more robust by comparing M right-neighbours. 
 When M == 1, it reduces to the original formulation.</p>
 <p>Do note that this formulation is <code>asymmetric</code>:</p>
 <pre><code>Xi(X, Y): Measures Y as a function of X
-Xi (Y, X): Measures X as a function of Y 
+Xi(Y, X): Measures X as a function of Y 
 
-Xi (X, Y) != Xi (Y, X)
+Xi(X, Y) != Xi(Y, X)
 </code></pre>
 <p>To illustrate this better, consider the following example:</p>
 <table>
@@ -457,12 +472,12 @@ Xi (X, Y) != Xi (Y, X)
 </thead>
 <tbody>
 <tr>
-<td>Xi (X, Y)</td>
+<td>Xi(X, Y)</td>
 <td>0.175</td>
 <td>0.111</td>
 </tr>
 <tr>
-<td>Xi (Y, X)</td>
+<td>Xi(Y, X)</td>
 <td>0.45</td>
 <td>0.75</td>
 </tr>
@@ -522,10 +537,17 @@ x = pd.DataFrame({
 xi = xicorpy.compute_xi_correlation(x)
 </code></pre>
 <h2 id="citations">Citations</h2>
+<div class="footnote">
+<hr />
 <ol>
-<li><a href="https://arxiv.org/abs/1909.10140">Chatterjee (2020). "A new coefficient of correlation"</a></li>
-<li><a href="https://arxiv.org/abs/2108.06828">Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"</a></li>
+<li id="fn:1">
+<p><a href="https://arxiv.org/abs/1909.10140">Chatterjee (2020). "A new coefficient of correlation"</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://arxiv.org/abs/2108.06828">Lin and Han (2021). "On boosting the power of Chatterjee's rank correlation"</a>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
 </ol>
+</div>
 
               
             </article>
@@ -555,13 +577,13 @@ xi = xicorpy.compute_xi_correlation(x)
       
       
         
-        <a href="../xicor/" class="md-footer__link md-footer__link--next" aria-label="Next: XiCor" rel="next">
+        <a href="../codec/" class="md-footer__link md-footer__link--next" aria-label="Next: Conditional Dependence" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              XiCor
+              Conditional Dependence
             </div>
           </div>
           <div class="md-footer__button md-icon">
