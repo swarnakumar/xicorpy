@@ -278,22 +278,37 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="foci/" class="md-nav__link">
+        FOCI
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_4">
+        <label class="md-nav__link" for="__nav_5">
           API Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="API Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
+        <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           API Reference
         </label>
@@ -333,7 +348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="foci.md" class="md-nav__link">
+      <a href="foci_api/" class="md-nav__link">
         FOCI
       </a>
     </li>
@@ -419,6 +434,7 @@
 <h2 id="installation">Installation</h2>
 <p>The package is available on PyPI. You can install using pip: <code>pip install xicorpy</code>.</p>
 <h2 id="usage">Usage</h2>
+<p>Compute Chatterjee's Xi:</p>
 <pre><code class="language-python">import xicorpy
 
 x = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
@@ -428,7 +444,45 @@ xi = xicorpy.compute_xi_correlation(x, y)
 xi, p_value = xicorpy.compute_xi_correlation(x, y, get_p_values=True)
 
 </code></pre>
-<p>Refer to Documentation for more details.</p>
+<p>Compute Conditional Dependence Coefficient:</p>
+<pre><code class="language-python">import numpy as np
+import xicorpy
+
+n = 10000
+p = 3
+x = np.random.uniform(0, 1, (n, p))
+
+# y is independent of each x, but is a function of all three put together
+y = np.mod(x.sum(axis=1), 1)
+
+# y is independent of x, so coeff is 0. 
+c = xicorpy.compute_conditional_dependence(y, x[:, 0])
+assert np.allclose(c, 0, atol=1e-2)
+
+# y is a function of all three put together. Now coeff is close to 1.
+c = xicorpy.compute_conditional_dependence(y, x)
+assert np.allclose(c, 1, atol=1e-1)
+
+# Given col1, and col2, y is a function of col3.
+c = xicorpy.compute_conditional_dependence(y, x[:, 0], x[:, 1:])
+assert np.allclose(c, 1, atol=1e-2)
+</code></pre>
+<p>Select Features using FOCI:</p>
+<pre><code class="language-python">import numpy as np
+import xicorpy
+
+
+n = 2000
+p = 100
+x = np.random.normal(0, 1, (n, p))
+y = x[:, 0] * x[:, 1] + np.sin(x[:, 2] * x[:, 0])
+
+# Select Features
+selected = xicorpy.select_features_using_foci(y, x, num_features=10)
+
+# Select Features with Initial Feature Set
+selected = xicorpy.select_features_using_foci(y, x, num_features=10, init_selection=[0])
+</code></pre>
 <h2 id="citations">Citations</h2>
 <div class="footnote">
 <hr />
