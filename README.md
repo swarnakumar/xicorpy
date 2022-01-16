@@ -31,7 +31,7 @@ xi, p_value = xicorpy.compute_xi_correlation(x, y, get_p_values=True)
 
 ```
 
-Refer to the [User Guide][user_guide] for more details.
+Refer to the [Docs][docs] for more details.
 
 ## Contributing to XiCorPy
 
@@ -45,5 +45,4 @@ Any help with the package is greatly appreciated! Pull requests and bug reports 
 3. [Azadkia and Chatterjee (2021). "A simple measure of conditional dependence"](https://arxiv.org/abs/1910.12327)
 
 <!-- Links -->
-[docs]: https://xicorpy.readthedocs.io/en/latest/
-[user_guide]: https://xicorpy.readthedocs.io/en/latest/user_guide.html
+[docs]: https://swarnakumar.github.io/xicorpy/
