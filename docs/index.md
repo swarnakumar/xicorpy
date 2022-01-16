@@ -7,7 +7,7 @@ The package currently implements:
 1. Chatterjee's Xi[^1]
 2. Modified Xi[^2]
 3. Conditional Dependence Coefficient[^3]
-4. Feature Selection Algorithm (FOCI)[^3]
+4. Feature Selection via Feature Ordering by Conditional Independence (FOCI) Algorithm [^3]
 
 
 
