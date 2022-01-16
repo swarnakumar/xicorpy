@@ -7,7 +7,7 @@ import scipy.stats as ss
 
 from sklearn.neighbors import NearestNeighbors
 
-from ._utils import convert_to_numeric
+from ._utils import convert_to_numeric, validate_and_prepare_for_conditional_dependence
 
 
 class ConditionalDependence:
@@ -30,31 +30,9 @@ class ConditionalDependence:
             ValueError: If y and z have different lengths.
             ValueError: If there are <= 2 valid y values.
         """
-        y_shape = np.shape(y)
-        z_shape = np.shape(z)
-
-        if not (np.ndim(y) == 1 and y_shape[0] > 1):
-            raise ValueError("y must be a 1D array with at least one sample")
-        if not (1 <= np.ndim(z) <= 2 and z_shape[0] >= 1):
-            raise ValueError("z must be a 1D or 2D array with at least one sample")
-
-        if z_shape[0] != y_shape[0]:
-            raise ValueError("y and z MUST have the same number of samples")
-
-        y_: pd.Series = convert_to_numeric(pd.DataFrame({"y": y}))["y"]
-
-        if y_.count() <= 2:
-            raise ValueError("y must have at least 3 non-null samples")
-
-        if y_.hasnans is not None:
-            y_ = y_.dropna()
-
-        z_ = convert_to_numeric(pd.DataFrame(z)).loc[y_.index]
-
+        self.y_, self.z_df = validate_and_prepare_for_conditional_dependence(y, z)
         self.y = y
         self.z = z
-        self.y_ = y_
-        self.z_df = z_
 
     def _validate_x(self, x: npt.ArrayLike):
         if not 1 <= np.ndim(x) <= 2:
