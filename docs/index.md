@@ -17,6 +17,8 @@ The package is available on PyPI. You can install using pip: `pip install xicorp
 
 ## Usage
 
+Compute Chatterjee's Xi:
+
 ```python
 import xicorpy
 
@@ -28,7 +30,50 @@ xi, p_value = xicorpy.compute_xi_correlation(x, y, get_p_values=True)
 
 ```
 
-Refer to Documentation for more details.
+Compute Conditional Dependence Coefficient:
+
+```python
+import numpy as np
+import xicorpy
+
+n = 10000
+p = 3
+x = np.random.uniform(0, 1, (n, p))
+
+# y is independent of each x, but is a function of all three put together
+y = np.mod(x.sum(axis=1), 1)
+
+# y is independent of x, so coeff is 0. 
+c = xicorpy.compute_conditional_dependence(y, x[:, 0])
+assert np.allclose(c, 0, atol=1e-2)
+
+# y is a function of all three put together. Now coeff is close to 1.
+c = xicorpy.compute_conditional_dependence(y, x)
+assert np.allclose(c, 1, atol=1e-1)
+
+# Given col1, and col2, y is a function of col3.
+c = xicorpy.compute_conditional_dependence(y, x[:, 0], x[:, 1:])
+assert np.allclose(c, 1, atol=1e-2)
+```
+
+Select Features using FOCI:
+
+```python
+import numpy as np
+import xicorpy
+
+
+n = 2000
+p = 100
+x = np.random.normal(0, 1, (n, p))
+y = x[:, 0] * x[:, 1] + np.sin(x[:, 2] * x[:, 0])
+
+# Select Features
+selected = xicorpy.select_features_using_foci(y, x, num_features=10)
+
+# Select Features with Initial Feature Set
+selected = xicorpy.select_features_using_foci(y, x, num_features=10, init_selection=[0])
+```
 
 
 ## Citations

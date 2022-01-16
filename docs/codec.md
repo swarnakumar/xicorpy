@@ -13,7 +13,6 @@ Make a random 10000 x 3 array:
 Y is independent of each column. But it is a function of all three put together.
 
 ```python
-import xicorpy
 import numpy as np
 
 n = 10000
@@ -28,6 +27,7 @@ y = np.mod(x.sum(axis=1), 1)
 Compute `T(Y, Z)`:
 
 ```python
+import xicorpy
 
 # y is independent of x, so coeff is 0. 
 c = xicorpy.compute_conditional_dependence(y, x[:, 0])
