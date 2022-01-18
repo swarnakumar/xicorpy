@@ -1,4 +1,5 @@
 site_name: XiCorPy
+repo_url: https://github.com/swarnakumar/xicorpy
 
 theme:
   name: "material"
@@ -15,7 +16,7 @@ plugins:
           rendering:
             show_source: false
       watch:
-        - src
+        - xicorpy
 
 nav:
   - Home: index.md

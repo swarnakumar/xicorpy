@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import pandas as pd
 
-from src.conditional_dependence import (
+from xicorpy.conditional_dependence import (
     compute_conditional_dependence,
     compute_conditional_dependence_1d,
 )
