@@ -13,7 +13,7 @@ repos:
     hooks:
       - id: tests
         name: Tests
-        entry: poetry run pytest --cov=src
+        entry: poetry run pytest --cov=xicorpy
         language: system
         types: [ python ]
         pass_filenames: false

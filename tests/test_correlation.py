@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.correlation import compute_xi_correlation
+from xicorpy.correlation import compute_xi_correlation
 
 
 @pytest.fixture

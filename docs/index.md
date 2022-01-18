@@ -49,7 +49,7 @@ assert np.allclose(c, 0, atol=1e-2)
 
 # y is a function of all three put together. Now coeff is close to 1.
 c = xicorpy.compute_conditional_dependence(y, x)
-assert np.allclose(c, 1, atol=1e-1)
+assert np.allclose(c, 1, atol=2e-1)
 
 # Given col1, and col2, y is a function of col3.
 c = xicorpy.compute_conditional_dependence(y, x[:, 0], x[:, 1:])

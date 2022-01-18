@@ -1,3 +1,3 @@
 # Workflow module
 
-::: src.correlation
+::: xicorpy.correlation

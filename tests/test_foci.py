@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from src import select_features_using_foci
+from xicorpy import select_features_using_foci
 
 
 @pytest.fixture

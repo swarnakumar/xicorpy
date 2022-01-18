@@ -1,3 +1,3 @@
 # Workflow module
 
-::: src.conditional_dependence
+::: xicorpy.conditional_dependence

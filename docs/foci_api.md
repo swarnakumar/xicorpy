@@ -1,3 +1,3 @@
 # FOCI module
 
-::: src.foci
+::: xicorpy.foci
