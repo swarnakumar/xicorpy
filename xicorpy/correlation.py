@@ -95,13 +95,16 @@ class XiCorrelation:
         """
         if _check_ties(self.x_df, self.y_df):
             if get_modified_xi:
-                raise warnings.warn(f"Cannot use modified xi when there are ties present. Either explicitly set 
-                                    `get_modified_xi=False` or leave as `None` to accept automatic decision.", RuntimeWarning)
+                raise warnings.warn(
+                    "Cannot use modified xi when there are ties present. Either explicitly set"
+                    "`get_modified_xi=False` or leave as `None` to accept automatic decision.",
+                    RuntimeWarning,
+                )
             elif not get_modified_xi:  # handles None and False
                 get_modified_xi = False
         elif get_modified_xi is None:
-            get_modified_xi = True            
-        
+            get_modified_xi = True
+
         ret = pd.DataFrame(0, index=self.x_df.columns, columns=self.y_df.columns)
         _, p = _get_p_no_ties(0, self.x_df.shape[0])
         p_values = pd.DataFrame(p, index=self.x_df.columns, columns=self.y_df.columns)
@@ -294,7 +297,7 @@ def _modified_xi(
     xi = -2 + 6 * num / den
 
     if get_p_value:
-        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n ** 2) * 2
+        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n**2) * 2
         p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
         return xi, np.sqrt(v), p
 
@@ -329,13 +332,14 @@ def _get_p_value(
     cq = np.cumsum(qfr)
     m = (cq + (n - ind) * qfr) / n
     b = (m * m).mean()
-    v = (ai - 2 * b + ci ** 2) / cu ** 2
+    v = (ai - 2 * b + ci**2) / cu**2
 
     p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
     return np.sqrt(v), p
 
+
 def _check_ties(*dfs: pd.DataFrame) -> bool:
-    df = pd.concat(dfs, ignore_index=True, axis='columns')
+    df = pd.concat(dfs, ignore_index=True, axis="columns")
     if len(df.drop_duplicates()) == len(df):
         return False
     return True
