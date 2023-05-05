@@ -335,7 +335,7 @@ def _get_p_value(
     return np.sqrt(v), p
 
 def _check_ties(*dfs: pd.DataFrame) -> bool:
-    for x in dfs:
-        if len(x.drop_duplicates()) == len(x):
-            return True
-    return False
+    df = pd.concat(dfs, ignore_index=True, axis='columns')
+    if len(df.drop_duplicates()) == len(df):
+        return False
+    return True
