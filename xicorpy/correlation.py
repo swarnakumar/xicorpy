@@ -1,4 +1,5 @@
 from typing import Tuple, Union
+import warnings
 
 import numpy as np
 import numpy.typing as npt
@@ -58,7 +59,7 @@ class XiCorrelation:
 
     def compute_xi(
         self,
-        get_modified_xi: bool = True,
+        get_modified_xi: bool = None,
         m_nearest_neighbours: int = None,
         get_p_values: bool = False,
     ) -> Union[_RetType, Tuple[_RetType, _RetType]]:
@@ -77,7 +78,7 @@ class XiCorrelation:
         For very large data, the two are likely to be very similar. We recommend using the modified Xi Coefficient.
 
         Args:
-            get_modified_xi: Should the modified xi be computed?
+            get_modified_xi: Should the modified xi be computed? By default this is True when there are no ties and False when ties are present
             m_nearest_neighbours: Only used if get_modified_xi is True.
             get_p_values: Should the p-values be computed?
                             The null hypothesis is that Y is completely independent of X (i.e., xi = 0).
@@ -92,6 +93,18 @@ class XiCorrelation:
                 - Same format at Xi
 
         """
+        if _check_ties(self.x_df, self.y_df):
+            if get_modified_xi:
+                warnings.warn(
+                    "Cannot use modified xi when there are ties present. Either explicitly set"
+                    "`get_modified_xi=False` or leave as `None` to accept automatic decision.",
+                    RuntimeWarning,
+                )
+            elif not get_modified_xi:  # handles None and False
+                get_modified_xi = False
+        elif get_modified_xi is None:
+            get_modified_xi = True
+
         ret = pd.DataFrame(0, index=self.x_df.columns, columns=self.y_df.columns)
         _, p = _get_p_no_ties(0, self.x_df.shape[0])
         p_values = pd.DataFrame(p, index=self.x_df.columns, columns=self.y_df.columns)
@@ -159,7 +172,7 @@ class XiCorrelation:
 def compute_xi_correlation(
     x: npt.ArrayLike,
     y: npt.ArrayLike = None,
-    get_modified_xi: bool = True,
+    get_modified_xi: bool = None,
     m_nearest_neighbours: int = None,
     get_p_values: bool = False,
 ) -> Union[_RetType, Tuple[_RetType, _RetType]]:
@@ -187,7 +200,7 @@ def compute_xi_correlation(
     Args:
         x (npt.ArrayLike): A single list or list of lists or 1D/2D numpy array or pd.Series or pd.DataFrame.
         y (npt.ArrayLike): A single list or list of lists or 1D/2D numpy array or pd.Series or pd.DataFrame.
-        get_modified_xi: Should the modified xi be computed?
+        get_modified_xi: Should the modified xi be computed? By default this is True when there are no ties and False when ties are present
         m_nearest_neighbours: Only used if get_modified_xi is True.
         get_p_values: Should the p-values be computed?
                         The null hypothesis is that Y is completely independent of X (i.e., xi = 0).
@@ -284,7 +297,7 @@ def _modified_xi(
     xi = -2 + 6 * num / den
 
     if get_p_value:
-        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n ** 2) * 2
+        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n**2) * 2
         p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
         return xi, np.sqrt(v), p
 
@@ -319,7 +332,14 @@ def _get_p_value(
     cq = np.cumsum(qfr)
     m = (cq + (n - ind) * qfr) / n
     b = (m * m).mean()
-    v = (ai - 2 * b + ci ** 2) / cu ** 2
+    v = (ai - 2 * b + ci**2) / cu**2
 
     p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
     return np.sqrt(v), p
+
+
+def _check_ties(*dfs: pd.DataFrame) -> bool:
+    df = pd.concat(dfs, ignore_index=True, axis="columns")
+    if len(df.drop_duplicates()) == len(df):
+        return False
+    return True
