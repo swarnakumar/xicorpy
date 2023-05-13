@@ -95,7 +95,7 @@ class XiCorrelation:
         """
         if _check_ties(self.x_df, self.y_df):
             if get_modified_xi:
-                raise warnings.warn(
+                warnings.warn(
                     "Cannot use modified xi when there are ties present. Either explicitly set"
                     "`get_modified_xi=False` or leave as `None` to accept automatic decision.",
                     RuntimeWarning,
