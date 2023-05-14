@@ -1,15 +1,10 @@
-import logging
+import warnings
 from typing import List, Union
 
 import numpy.typing as npt
 
 from ._utils import validate_and_prepare_for_conditional_dependence
-from .conditional_dependence import (
-    compute_conditional_dependence,
-    compute_conditional_dependence_1d,
-)
-
-logger = logging.getLogger(__name__)
+from .conditional_dependence import compute_conditional_dependence_1d
 
 
 class FOCI:
@@ -48,7 +43,6 @@ class FOCI:
     def select_features(
         self,
         num_features: int = None,
-        auto_stop: bool = True,
         init_selection: List[Union[int, str]] = None,
     ) -> List[Union[int, str]]:
         """
@@ -57,7 +51,6 @@ class FOCI:
 
         Args:
             num_features: Maximum number of features to select. Defaults to the number of features in x.
-            auto_stop: Should the algorithm stop automatically when conditional dependence starts dropping?
             init_selection (list): Initial selection of features.
 
         Returns:
@@ -68,26 +61,11 @@ class FOCI:
         """
         if num_features is None:  # pragma: no cover
             num_features = self.x_df.shape[1]
-            if not auto_stop:
-                raise ValueError(
-                    "If num_features is not specified, auto_stop MUST be True"
-                )
 
         current_selection = [i for i in (init_selection or [])]
         if len(current_selection) >= num_features:
-            logger.warning("Initial selection is already complete")
+            warnings.warn("Initial selection is already complete")
             return current_selection
-
-        if current_selection:
-            curr_t = compute_conditional_dependence(
-                self.y_, self.x_df[current_selection]
-            )
-        else:
-            next_p, curr_t = self._get_next_p(current_selection)
-            if curr_t <= 0:  # pragma: no cover
-                logger.warning("Unable to find the first feature")
-                return []
-            current_selection.append(next_p)
 
         stop = False
         while not stop and len(current_selection) < num_features:
@@ -95,13 +73,6 @@ class FOCI:
 
             if next_t <= 0:  # pragma: no cover
                 stop = True
-            elif auto_stop:
-                # Codec is decreasing! Stop!
-                if next_t - curr_t <= 0:
-                    stop = True
-                else:
-                    curr_t = next_t
-                    current_selection.append(next_p)
             else:
                 current_selection.append(next_p)
 
@@ -112,7 +83,6 @@ def select_features_using_foci(
     y: npt.ArrayLike,
     x: npt.ArrayLike,
     num_features: int = None,
-    auto_stop: bool = True,
     init_selection: List[Union[int, str]] = None,
 ) -> List[Union[int, str]]:
     """
@@ -125,7 +95,6 @@ def select_features_using_foci(
         y (npt.ArrayLike): The dependent variable. A single list or 1D array or a pandas Series.
         x (npt.ArrayLike): The independent variables. A single list or list of lists or 1D/2D numpy array or pd.Series or pd.DataFrame.
         num_features: Max number of features to select. Defaults to ALL features.
-        auto_stop: If True, stops when the conditional dependence stops increasing.
         init_selection (list): Initial selection of features.
             If `x` is a `pd.DataFrame`, this is expected to be a list of column names.
             Otherwise, this is expected to be a list of indices.
@@ -142,4 +111,4 @@ def select_features_using_foci(
         ValueError: If there are <= 2 valid y values.
 
     """
-    return FOCI(y, x).select_features(num_features, auto_stop, init_selection)
+    return FOCI(y, x).select_features(num_features, init_selection)

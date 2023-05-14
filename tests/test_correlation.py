@@ -113,7 +113,7 @@ def test_compute_xi_anscombes_quartet_4_yx(anscombes_quartet):
     xi = compute_xi_correlation(
         anscombes_quartet["y_4"], anscombes_quartet["x_4"], get_modified_xi=False
     )
-    assert np.allclose(xi, 0.45, 1e-4), f"xi = {xi}. Expected: 0.45"
+    assert np.allclose(xi, 0.945, 1e-4), f"xi = {xi}. Expected: 0.945"
 
     xi = compute_xi_correlation(
         anscombes_quartet["y_4"], anscombes_quartet["x_4"], get_modified_xi=True
@@ -167,12 +167,14 @@ def test_compute_xi_non_numeric_xy():
     assert np.allclose(xi, xi_valid), f"xi = {xi}; xi_valid: {xi_valid}."
 
 
-def test_compute_xi_non_numeric_yx():
+def test_compute_modified_xi_non_numeric_yx():
     x = ["abcd", "abcd", "xsdf", "abcd", "xsdf", "wert", None] * 10
     y = [1, 2, 3, 4, 5, 6, 1] * 10
 
-    xi = compute_xi_correlation(y, x, False)
-    assert np.allclose(xi, 0.908695), f"xi = {xi}. Expected: 0.908695."
+    # Asking to compute modified Xi, but there are ties. Expect a warning
+    with pytest.warns(RuntimeWarning):
+        xi = compute_xi_correlation(y, x, True)
+    assert np.allclose(xi, 0.808038), f"xi = {xi}. Expected: 0.808038."
 
 
 def test_all_constant():

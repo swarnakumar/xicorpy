@@ -1,5 +1,5 @@
-from typing import Tuple, Union
 import warnings
+from typing import Tuple, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -78,10 +78,12 @@ class XiCorrelation:
         For very large data, the two are likely to be very similar. We recommend using the modified Xi Coefficient.
 
         Args:
-            get_modified_xi: Should the modified xi be computed? By default this is True when there are no ties and False when ties are present
-            m_nearest_neighbours: Only used if get_modified_xi is True.
+            get_modified_xi: Should the modified xi be computed?
+                    Defaults to True when there are no ties, and False when ties are present.
+            m_nearest_neighbours: Only used when get_modified_xi is True.
+                    Defaults to square-root of array size.
             get_p_values: Should the p-values be computed?
-                            The null hypothesis is that Y is completely independent of X (i.e., xi = 0).
+                    The null hypothesis is that Y is completely independent of X (i.e., xi = 0).
 
         Returns:
             float/np.ndarray/pd.DataFrame:
@@ -89,21 +91,25 @@ class XiCorrelation:
                 - If both X and Y are 1-d, returns a single float.
                 - If X is numpy object, returns a 2-D numpy array.
                 - Otherwise returns a pd.DataFrame.
-            - P-Values (only if get_p_values are true):
+            - P-Values (only when get_p_values are true):
                 - Same format at Xi
 
         """
-        if _check_ties(self.x_df, self.y_df):
-            if get_modified_xi:
-                warnings.warn(
-                    "Cannot use modified xi when there are ties present. Either explicitly set"
-                    "`get_modified_xi=False` or leave as `None` to accept automatic decision.",
-                    RuntimeWarning,
-                )
-            elif not get_modified_xi:  # handles None and False
-                get_modified_xi = False
-        elif get_modified_xi is None:
-            get_modified_xi = True
+        if get_modified_xi is False:
+            pass
+        else:
+            ties = _check_ties(self.x_df, self.y_df)
+            if ties:
+                if get_modified_xi is True:
+                    warnings.warn(
+                        "Cannot use modified xi when there are ties present. Either explicitly set"
+                        "`get_modified_xi=False` or leave as `None` to accept automatic decision.",
+                        RuntimeWarning,
+                    )
+                else:
+                    get_modified_xi = False
+            elif get_modified_xi is None:
+                get_modified_xi = True
 
         ret = pd.DataFrame(0, index=self.x_df.columns, columns=self.y_df.columns)
         _, p = _get_p_no_ties(0, self.x_df.shape[0])
@@ -265,8 +271,8 @@ def _xi(
     y: pd.Series, get_p_value: bool = False
 ) -> Union[float, Tuple[float, float, float]]:
     n = y.shape[0]
-    r = y.rank(method="max", ascending=True).values
-    l = y.rank(method="max", ascending=False).values
+    r = y.rank(method="max", ascending=True).values - 1
+    l = y.rank(method="max", ascending=False).values - 1
     num = n * np.abs(r[1:] - r[:-1]).sum()
     den = 2 * (l * (n - l)).sum()
     xi = 1 - num / den
@@ -297,7 +303,7 @@ def _modified_xi(
     xi = -2 + 6 * num / den
 
     if get_p_value:
-        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n**2) * 2
+        v = (2 / 5 * 1 / (n * m) + 8 / 15 * m / n ** 2) * 2
         p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
         return xi, np.sqrt(v), p
 
@@ -332,7 +338,7 @@ def _get_p_value(
     cq = np.cumsum(qfr)
     m = (cq + (n - ind) * qfr) / n
     b = (m * m).mean()
-    v = (ai - 2 * b + ci**2) / cu**2
+    v = (ai - 2 * b + ci ** 2) / cu ** 2
 
     p = 1 - ss.norm.cdf(np.sqrt(n) * xi / np.sqrt(v))
     return np.sqrt(v), p

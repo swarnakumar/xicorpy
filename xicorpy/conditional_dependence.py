@@ -3,7 +3,6 @@ from typing import Dict, Union
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-import scipy.stats as ss
 
 from sklearn.neighbors import NearestNeighbors
 
@@ -213,7 +212,7 @@ def _conditional_dependence_with_x(
 
     x_neighbors = NearestNeighbors(n_neighbors=2).fit(x.values)
     n_i = x_neighbors.kneighbors(n_neighbors=1, return_distance=False).ravel()
-    r_n = ss.rankdata(n_i, method="max")
+    r_n = r_y[n_i]
 
     num = (np.minimum(r_y, r_m) - np.minimum(r_y, r_n)).sum()
     den = (r_y - np.minimum(r_y, r_n)).sum()
@@ -231,7 +230,7 @@ def _conditional_dependence_with_each_z(
 
     x_neighbors = NearestNeighbors(n_neighbors=2).fit(x.values)
     n_i = x_neighbors.kneighbors(n_neighbors=1, return_distance=False).ravel()
-    r_n = ss.rankdata(n_i, method="max")
+    r_n = r_y[n_i]
 
     for c in z.columns:
         x_z = pd.concat([x, z[[c]]], axis=1)
