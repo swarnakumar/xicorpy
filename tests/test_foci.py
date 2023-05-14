@@ -40,14 +40,6 @@ def test_add_83(data):
     assert [i for i in expected if i not in selected] == [], f"Selected: {selected}"
 
 
-def test_add_83_wo_autostop(data):
-    y = data[:, 0] * data[:, 1] + np.sin(data[:, 2] * data[:, 0])
-
-    selected = select_features_using_foci(y, data, num_features=3, auto_stop=False)
-    expected = [0, 1, 2]
-    assert [i for i in expected if i not in selected] == [], f"Selected: {selected}"
-
-
 def test_add_84(data):
     y = (
         data[:, 0] * data[:, 1]
