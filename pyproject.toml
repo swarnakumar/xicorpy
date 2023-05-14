@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xicorpy"
-version = "0.1.2"
+version = "0.2"
 description = "Python implementation of Chatterjee's Rank Correlation, its modifications, and other offshoots"
 authors = ["Swarna Vallabhaneni <swarnakumar@gmail.com>"]
 maintainers = ["Swarna Vallabhaneni <swarnakumar@gmail.com>"]
