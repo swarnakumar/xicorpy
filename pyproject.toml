@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xicorpy"
-version = "0.1.2"
+version = "0.3"
 description = "Python implementation of Chatterjee's Rank Correlation, its modifications, and other offshoots"
 authors = ["Swarna Vallabhaneni <swarnakumar@gmail.com>"]
 maintainers = ["Swarna Vallabhaneni <swarnakumar@gmail.com>"]
@@ -20,21 +20,20 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.7.1,<3.11"
-pandas = "^1.2"
-numpy = "^1.17"
-scipy = "^1.7"
-scikit-learn = "^1.0.2"
-mypy = "0.931"
-mkdocstrings = {version = "~0.17", optional = true}
-mkdocs-material = {version = "~8.1", optional = true}
+python = ">=3.8,<3.12"
+pandas = "^2"
+numpy = "^1.24"
+scikit-learn = "^1.2"
+mypy = "1.2"
+mkdocstrings = {version = "~0.20", optional = true}
+mkdocs-material = {version = "~9.1", optional = true}
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
-pytest-cov = "^3.0.0"
+pytest = "^7.2"
+pytest-cov = "^4.0.0"
 pre-commit = "^2.16.0"
-coverage = {extras = ["toml"], version = "^6.2"}
-mypy = "^0.931"
+coverage = {extras = ["toml"], version = "^7.2"}
+mypy = "1.2"
 
 [tool.poetry.extras]
 docs = ["mkdocstrings", "mkdocs-material"]
