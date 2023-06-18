@@ -641,7 +641,7 @@
 
 
 <h3 id="xicorpy.foci.FOCI.select_features" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">select_features</span><span class="p">(</span><span class="n">num_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">select_features</span><span class="p">(</span><span class="n">num_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_conditional_dependency</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
@@ -682,6 +682,16 @@
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>get_conditional_dependency</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If True, returns conditional dependency. Defaults to False</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -696,11 +706,18 @@
     <tbody>
         <tr>
 <td><code>list</code></td>          <td>
-                <code><span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]]</code>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.Tuple">Tuple</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.List">List</span>[float]]]</code>
           </td>
           <td><p>List of selected features.
 If x was <code>pd.DataFrame</code>, this will be column names.
 Otherwise, this will be indices.</p></td>
+        </tr>
+        <tr>
+<td><code>list</code></td>          <td>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.Tuple">Tuple</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.List">List</span>[float]]]</code>
+          </td>
+          <td><p>Conditional Dependency measure as each feature got selected
+Only when get_conditional_dependency is True</p></td>
         </tr>
     </tbody>
   </table>
@@ -723,7 +740,7 @@ Otherwise, this will be indices.</p></td>
 
 
 <h2 id="xicorpy.foci.select_features_using_foci" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">select_features_using_foci</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">select_features_using_foci</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_conditional_dependency</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -787,6 +804,16 @@ Otherwise, this is expected to be a list of indices.</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>get_conditional_dependency</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If True, returns conditional dependency</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -801,11 +828,18 @@ Otherwise, this is expected to be a list of indices.</p></td>
     <tbody>
         <tr>
 <td><code>list</code></td>          <td>
-                <code><span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]]</code>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.Tuple">Tuple</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.List">List</span>[float]]]</code>
           </td>
           <td><p>List of selected features.
 If x was <code>pd.DataFrame</code>, this will be column names.
 Otherwise, this will be indices.</p></td>
+        </tr>
+        <tr>
+<td><code>list</code></td>          <td>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.Tuple">Tuple</span>[<span title="typing.List">List</span>[<span title="typing.Union">Union</span>[int, str]], <span title="typing.List">List</span>[float]]]</code>
+          </td>
+          <td><p>Conditional Dependency measure as each feature got selected
+Only when get_conditional_dependency is True</p></td>
         </tr>
     </tbody>
   </table>
