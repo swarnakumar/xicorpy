@@ -64,3 +64,21 @@ def test_add_84_with_init(data):
     selected = select_features_using_foci(y, data, num_features=10, init_selection=[0])
     expected = [0, 1, 2]
     assert [i for i in expected if i not in selected] == [], f"Selected: {selected}"
+
+
+def test_add_84_with_codec(data):
+    y = (
+        data[:, 0] * data[:, 1]
+        + data[:, 0]
+        - data[:, 2]
+        + np.random.normal(0, 1, data.shape[0])
+    )
+
+    selected, codec = select_features_using_foci(
+        y, data, num_features=10, get_conditional_dependency=True
+    )
+    expected = [0, 1, 2]
+    assert [i for i in expected if i not in selected] == [], f"Selected: {selected}"
+    print(selected, codec)
+    assert len(selected) == len(codec)
+    assert all([0 < c < 1 for c in codec])
