@@ -1,5 +1,5 @@
 import warnings
-from typing import List, Union
+from typing import List, Union, Tuple
 
 import numpy.typing as npt
 
@@ -48,7 +48,7 @@ class FOCI:
         num_features: int = None,
         init_selection: List[Union[int, str]] = None,
         get_conditional_dependency: bool = False,
-    ) -> Union[List[Union[int, str]], tuple[List[Union[int, str]], List[float]]]:
+    ) -> Union[List[Union[int, str]], Tuple[List[Union[int, str]], List[float]]]:
         """
         Selects features based on the Feature Ordering based on Conditional Independence (FOCI) algorithm in:
             [Azadkia and Chatterjee (2021). "A simple measure of conditional dependence", Annals of Statistics](https://arxiv.org/abs/1910.12327)
@@ -104,7 +104,7 @@ def select_features_using_foci(
     num_features: int = None,
     init_selection: List[Union[int, str]] = None,
     get_conditional_dependency: bool = False,
-) -> List[Union[int, str]]:
+) -> Union[List[Union[int, str]], Tuple[List[Union[int, str]], List[float]]]:
     """
     Implements the FOCI algorithm for feature selection.
 
