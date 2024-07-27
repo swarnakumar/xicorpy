@@ -111,7 +111,7 @@ class XiCorrelation:
             elif get_modified_xi is None:
                 get_modified_xi = True
 
-        ret = pd.DataFrame(0, index=self.x_df.columns, columns=self.y_df.columns)
+        ret = pd.DataFrame(0.0, index=self.x_df.columns, columns=self.y_df.columns)
         _, p = _get_p_no_ties(0, self.x_df.shape[0])
         p_values = pd.DataFrame(p, index=self.x_df.columns, columns=self.y_df.columns)
 
