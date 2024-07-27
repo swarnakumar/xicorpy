@@ -129,7 +129,7 @@ class XiCorrelation:
                     ret.loc[i] = 0
                 else:
                     # Sort once to avoid sorting each time we compute correlation.
-                    i_col = i_col.sort_values()
+                    i_col = i_col.sort_values(kind="stable")
                     for j in self.y_df.columns:
                         j_col: pd.Series = self.y_df.loc[i_col.index, j]
                         if j_col.hasnans:
