@@ -41,7 +41,7 @@ class FOCI:
             codec = compute_conditional_dependence_1d(self.y_, self.x_df)
 
         if not codec:
-            return 0, 0
+            return 0, 0 # pragma: no cover
         next_p = max(codec, key=lambda k: codec[k])
         return next_p, codec[next_p]
 
